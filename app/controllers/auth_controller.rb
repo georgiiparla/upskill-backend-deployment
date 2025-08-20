@@ -1,10 +1,11 @@
+# app/controllers/auth_controller.rb
+
 require 'sinatra/json'
 require 'bcrypt'
 require_relative './application_controller'
 
 class AuthController < ApplicationController
   # SIGN UP a new user
-  # POST /auth/signup
   post '/signup' do
     username = @request_payload['username']
     email = @request_payload['email']
@@ -14,20 +15,18 @@ class AuthController < ApplicationController
       halt 400, json({ error: 'Username, email, and password are required' })
     end
 
-    # Check if a user with that email already exists
-    existing_user = DB.get_first_row("SELECT * FROM users WHERE email = ?", email)
+    # PG SYNTAX: Use exec_params with $1 and .first
+    existing_user = DB.exec_params("SELECT * FROM users WHERE email = $1", [email]).first
     if existing_user
       halt 409, json({ error: 'User with this email already exists' })
     end
 
-    # Hash the password for secure storage
     password_digest = BCrypt::Password.create(password)
 
-    DB.execute(
-      "INSERT INTO users (username, email, password_digest) VALUES (?, ?, ?)",
-      username,
-      email,
-      password_digest
+    # PG SYNTAX: Use exec_params with $1, $2, $3 placeholders
+    DB.exec_params(
+      "INSERT INTO users (username, email, password_digest) VALUES ($1, $2, $3)",
+      [username, email, password_digest]
     )
 
     status 201
@@ -35,7 +34,6 @@ class AuthController < ApplicationController
   end
 
   # LOGIN an existing user
-  # POST /auth/login
   post '/login' do
     email = @request_payload['email']
     password = @request_payload['password']
@@ -44,11 +42,11 @@ class AuthController < ApplicationController
       halt 400, json({ error: 'Email and password are required' })
     end
 
-    user = DB.get_first_row("SELECT * FROM users WHERE email = ?", email)
+    # PG SYNTAX: Use exec_params with $1 and .first
+    user = DB.exec_params("SELECT * FROM users WHERE email = $1", [email]).first
 
-    # Verify user exists and password is correct
     if user && BCrypt::Password.new(user['password_digest']) == password
-      session[:user_id] = user['id'] # Create the session
+      session[:user_id] = user['id']
       json({ message: 'Logged in successfully', user: { id: user['id'], username: user['username'], email: user['email'] } })
     else
       halt 401, json({ error: 'Invalid email or password' })
@@ -56,14 +54,12 @@ class AuthController < ApplicationController
   end
 
   # LOGOUT the current user
-  # POST /auth/logout
   post '/logout' do
     session.clear
     json({ message: 'Logged out successfully' })
   end
 
   # Check the current user's session status
-  # GET /auth/profile
   get '/profile' do
     if logged_in?
       json({ logged_in: true, user: current_user })

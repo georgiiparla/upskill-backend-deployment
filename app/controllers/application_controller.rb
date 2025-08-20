@@ -22,7 +22,9 @@ class ApplicationController < Sinatra::Base
     def current_user
       return @current_user if @current_user
       return nil unless session[:user_id]
-      @current_user = DB.get_first_row("SELECT id, username, email FROM users WHERE id = ?", session[:user_id])
+      # PG SYNTAX: Use exec_params with $1 placeholder and .first to get a single row.
+      sql = "SELECT id, username, email FROM users WHERE id = $1"
+      @current_user = DB.exec_params(sql, [session[:user_id]]).first
     end
 
     def logged_in?
@@ -38,9 +40,6 @@ class ApplicationController < Sinatra::Base
   before do
     @request_payload = {}
     
-    # FINAL FIX: The most robust method. Read the body. If the resulting
-    # string is empty, do nothing. Otherwise, parse it. This works
-    # in both test and live environments without causing errors.
     body = request.body.read
     
     unless body.empty?
