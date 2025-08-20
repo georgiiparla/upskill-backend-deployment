@@ -13,8 +13,6 @@ frontend_origin = ENV['FRONTEND_URL'] || 'http://localhost:3000'
 
 use Rack::Cors do
   allow do
-    # This is configured to allow requests from your frontend and Postman.
-    # The `credentials: true` part is crucial for session cookies to work.
     origins frontend_origin
     resource '*',
       headers: :any,
@@ -28,8 +26,10 @@ use Rack::Session::Cookie, {
   key: 'rack.session',
   path: '/',
   expire_after: 2592000, # 30 days in seconds
-  # This secret should be kept private in a real application
-  secret: '9a78e4f5a3e8c9a3b2b1d0e8c7f9a2b5e4f3a2b1d0c9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1'
+  secret: ENV['SESSION_SECRET'] || 'a_very_long_and_secure_secret_for_development',
+  # --- ADD THESE TWO LINES ---
+  same_site: :none, # Allows the cookie to be sent cross-domain
+  secure: true      # Requires the connection to be HTTPS (which it is on Render)
 }
 
 run Rack::Builder.new {
