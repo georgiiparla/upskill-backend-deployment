@@ -1,10 +1,10 @@
 -- =============================================================================
--- File: db/seeds.sql (Updated)
+-- File: db/seeds.sql (Corrected for PostgreSQL)
 -- =============================================================================
--- This file now includes seed data for the new 'users' table and links
--- the 'feedback_history' entries to these users.
 
 -- Clear existing data from all tables to prevent duplicates on re-seed
+-- NOTE: The TRUNCATE command is often faster for clearing all rows.
+-- Using DELETE here for simplicity and consistency.
 DELETE FROM users;
 DELETE FROM quests;
 DELETE FROM feedback_history;
@@ -13,8 +13,12 @@ DELETE FROM agenda_items;
 DELETE FROM activity_stream;
 DELETE FROM meetings;
 
--- Reset the auto-increment counters for SQLite
-DELETE FROM sqlite_sequence;
+--
+-- The SQLite-specific line below has been removed.
+-- DELETE FROM sqlite_sequence; 
+-- PostgreSQL's SERIAL type handles auto-increment resets automatically
+-- when tables are created.
+--
 
 
 -- Seed data for the users table
@@ -35,6 +39,9 @@ INSERT INTO quests (title, description, points, progress, completed) VALUES
 ('Teamwork Titan', 'Successfully complete a paired programming challenge.', 100, 100, 1);
 
 -- Seed data for the feedback_history table, now linked to users
+-- NOTE: This will fail if you don't have users with IDs 1, 2, and 3.
+-- You should sign up users first or add them via a rake task.
+-- For now, we assume the test setup creates these users.
 INSERT INTO feedback_history (user_id, subject, content, created_at, sentiment) VALUES
 (1, 'Q3 Marketing Plan', 'The plan is well-structured, but the timeline seems a bit too aggressive. Consider adding a buffer week.', '2025-08-15', 'Neutral'),
 (2, 'New Feature Design', 'I love the new UI! It''s much more intuitive than the previous version. Great work!', '2025-08-14', 'Positive'),
