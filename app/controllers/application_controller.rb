@@ -12,12 +12,6 @@ class ApplicationController < Sinatra::Base
     json({ error: 'An internal server error occurred.' })
   end
 
-  # --- Specific Handler for Database Busy Errors ---
-  error SQLite3::BusyException do
-    status 503 # Service Unavailable
-    json({ error: 'The database is currently busy. Please try again in a moment.' })
-  end
-
   # --- Global 404 Not Found Handler ---
   not_found do
     status 404
