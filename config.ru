@@ -9,11 +9,13 @@ require_relative './app/controllers/feedback_controller'
 require_relative './app/controllers/leaderboard_controller'
 require_relative './app/controllers/dashboard_controller'
 
+frontend_origin = ENV['FRONTEND_URL'] || 'http://localhost:3000'
+
 use Rack::Cors do
   allow do
     # This is configured to allow requests from your frontend and Postman.
     # The `credentials: true` part is crucial for session cookies to work.
-    origins 'http://localhost:3000' 
+    origins frontend_origin
     resource '*',
       headers: :any,
       methods: [:get, :post, :put, :patch, :delete, :options, :head],
