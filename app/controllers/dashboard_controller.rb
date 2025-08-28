@@ -1,5 +1,3 @@
-# app/controllers/dashboard_controller.rb
-
 require 'sinatra/json'
 require_relative './application_controller'
 
@@ -14,6 +12,7 @@ class DashboardController < ApplicationController
     activity_stream = DB.exec("SELECT * FROM activity_stream ORDER BY id DESC LIMIT 5")
     meetings = DB.exec("SELECT * FROM meetings ORDER BY meeting_date DESC")
 
+    # This mock data is unchanged
     mock_activity_data = {
       personal: {
         quests:   { allTime: 5, thisWeek: 1 },

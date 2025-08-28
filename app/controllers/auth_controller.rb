@@ -1,5 +1,3 @@
-# app/controllers/auth_controller.rb
-
 require 'sinatra/json'
 require 'bcrypt'
 require_relative './application_controller'

@@ -1,7 +1,3 @@
--- =============================================================================
--- File: db/seeds.sql (Final Version for Deployment)
--- =============================================================================
-
 -- Clear all table data and reset auto-increment counters.
 TRUNCATE TABLE users, quests, feedback_history, leaderboard, agenda_items, activity_stream, meetings RESTART IDENTITY CASCADE;
 
@@ -16,16 +12,6 @@ INSERT INTO quests (title, description, points, progress, completed) VALUES
 ('Communication Pro', 'Provide constructive feedback on 5 different project documents.', 200, 60, 0),
 ('Leadership Leap', 'Lead a project planning session and submit the meeting notes.', 250, 0, 0),
 ('Teamwork Titan', 'Successfully complete a paired programming challenge.', 100, 100, 1);
-
---
--- We will NOT seed feedback history, as there are no users to associate it with.
--- This data will be generated naturally by users of the live application.
---
--- INSERT INTO feedback_history (user_id, subject, content, created_at, sentiment) VALUES
--- (1, 'Q3 Marketing Plan', 'The plan is well-structured...', '2025-08-15', 'Neutral'),
--- (2, 'New Feature Design', 'I love the new UI!...', '2025-08-14', 'Positive'),
--- (3, 'API Documentation', 'The endpoint for user authentication is missing...', '2025-08-12', 'Negative');
---
 
 -- Seed data for the leaderboard table (using generic names)
 INSERT INTO leaderboard (name, points, badges) VALUES

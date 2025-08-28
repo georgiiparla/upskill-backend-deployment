@@ -1,5 +1,3 @@
-# app/controllers/feedback_controller.rb
-
 require 'sinatra/json'
 require_relative './application_controller'
 

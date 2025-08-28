@@ -25,7 +25,7 @@ CREATE TABLE feedback_history (
     user_id INTEGER, -- Link to the user who submitted it
     subject TEXT,
     content TEXT,
-    created_at TEXT, -- Storing date as text in YYYY-MM-DD format
+    created_at TEXT, -- Storing date as text in YYY-MM-DD format
     sentiment TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );

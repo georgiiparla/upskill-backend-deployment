@@ -1,5 +1,3 @@
-# app/controllers/application_controller.rb
-
 require 'sinatra/base'
 require 'sinatra/json'
 

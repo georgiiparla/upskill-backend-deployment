@@ -27,7 +27,6 @@ use Rack::Session::Cookie, {
   path: '/',
   expire_after: 2592000, # 30 days in seconds
   secret: ENV['SESSION_SECRET'] || 'a_very_long_and_secure_secret_for_development',
-  # --- ADD THESE TWO LINES ---
   same_site: :none, # Allows the cookie to be sent cross-domain
   secure: true      # Requires the connection to be HTTPS (which it is on Render)
 }

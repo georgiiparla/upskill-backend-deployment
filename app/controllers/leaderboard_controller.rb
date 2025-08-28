@@ -1,5 +1,3 @@
-# app/controllers/leaderboard_controller.rb
-
 require 'sinatra/json'
 require_relative './application_controller'
 
@@ -10,6 +8,7 @@ class LeaderboardController < ApplicationController
   
   get '/' do
     # PG SYNTAX: Use DB.exec for queries without parameters.
+    # The query is simpler now because the 'name' is in the leaderboard table directly.
     result = DB.exec("SELECT * FROM leaderboard ORDER BY points DESC")
     
     leaderboard = result.map do |row|
